@@ -1,22 +1,22 @@
 ########################################################
 ##
-## Quotes.ps1
+## Guides.ps1
 ## Client facade to content management Pip.Services
-## Quotes commands
+## Guides commands
 ##
 #######################################################
 
 
-function Get-PipQuotes
+function Get-PipGuides
 {
 <#
 .SYNOPSIS
 
-Gets page with quotes by specified criteria
+Gets page with guides by specified criteria
 
 .DESCRIPTION
 
-Gets a page with quotes that satisfy specified criteria
+Gets a page with guides that satisfy specified criteria
 
 .PARAMETER Connection
 
@@ -32,7 +32,7 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes)
+An operation uri (default: /api/1.0/guides)
 
 .PARAMETER Filter
 
@@ -52,8 +52,8 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 quotes from test cluster that contain 'abc' string
-PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
+# Read top 10 guides from test cluster that contain 'abc' string
+PS> Get-PipGuides -Name "test" -Filter @{ tags="goals,success" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -66,7 +66,7 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes",
+        [string] $Uri = "/api/1.0/guides",
         [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Filter = @{},
         [Parameter(Mandatory=$false, Position = 1, ValueFromPipelineByPropertyName=$true)]
@@ -96,16 +96,16 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
 }
 
 
-function Get-PipQuote
+function Get-PipGuide
 {
 <#
 .SYNOPSIS
 
-Gets quote by id
+Gets guide by id
 
 .DESCRIPTION
 
-Gets quote by its unique id
+Gets guide by its unique id
 
 .PARAMETER Connection
 
@@ -121,16 +121,16 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/guides/{0})
 
 .PARAMETER Id
 
-A quote id
+A guide id
 
 .EXAMPLE
 
-# Gets quote with id 1232
-PS> Get-PipQuote -Name "test" -Id 123
+# Gets guide with id 1232
+PS> Get-PipGuide -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -143,7 +143,7 @@ PS> Get-PipQuote -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/guides/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )
@@ -160,16 +160,16 @@ PS> Get-PipQuote -Name "test" -Id 123
 }
 
 
-function Get-PipRandomQuote
+function Get-PipRandomGuide
 {
 <#
 .SYNOPSIS
 
-Gets a random quote
+Gets a random guide
 
 .DESCRIPTION
 
-Gets a random quote
+Gets a random guide
 
 .PARAMETER Connection
 
@@ -185,7 +185,7 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/random)
+An operation uri (default: /api/1.0/guides/random)
 
 .PARAMETER Filter
 
@@ -194,7 +194,7 @@ A filter with search criteria (default: no filter)
 .EXAMPLE
 
 # Gets a random
-PS> Get-PipRandomQuote -Name "test"
+PS> Get-PipRandomGuide -Name "test"
 
 #>
     [CmdletBinding()]
@@ -207,7 +207,7 @@ PS> Get-PipRandomQuote -Name "test"
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/random",
+        [string] $Uri = "/api/1.0/guides/random",
         [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Filter = @{}
     )
@@ -225,16 +225,16 @@ PS> Get-PipRandomQuote -Name "test"
 }
 
 
-function New-PipQuote
+function New-PipGuide
 {
 <#
 .SYNOPSIS
 
-Creates a new quote
+Creates a new guide
 
 .DESCRIPTION
 
-Creates a new quote
+Creates a new guide
 
 .PARAMETER Connection
 
@@ -250,21 +250,31 @@ An operation method (default: 'Post')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes)
+An operation uri (default: /api/1.0/guides)
 
-.PARAMETER Quote
+.PARAMETER Guide
 
-A quote with the following structure:
+A guide with the following structure:
 - id: string
-- text: MultiString
-- author: MultiString
-- status: string - new, writing, translating, verifying, completed
+- type: string - "introduction", "new release"
+- app: string
+- version: string
+- pages: GuidePageV1[]
+  - title: MultiString
+  - content: MultiString
+  - more_url: string
+  - color: string
+  - pic_id: string
+  - pic_uri: string
 - tags: string[]
+- status: string - new, writing, translating, verifying, completed
+- custom_hdr: any
+- custom_dat: any
 
 .EXAMPLE
 
-# Creates a new quote
-PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Creates a new guide
+PS> New-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
 
 #>
     [CmdletBinding()]
@@ -277,16 +287,16 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes",
+        [string] $Uri = "/api/1.0/guides",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $Quote
+        [Object] $Guide
     )
     begin {}
     process 
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Guide
         
         Write-Output $result
     }
@@ -294,16 +304,16 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
 }
 
 
-function Update-PipQuote
+function Update-PipGuide
 {
 <#
 .SYNOPSIS
 
-Creates a new quote
+Creates a new guide
 
 .DESCRIPTION
 
-Creates a new quote
+Creates a new guide
 
 .PARAMETER Connection
 
@@ -319,21 +329,31 @@ An operation method (default: 'Put')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/guides/{0})
 
-.PARAMETER Quote
+.PARAMETER Guide
 
-A quote with the following structure:
+A guide with the following structure:
 - id: string
-- text: MultiString
-- author: MultiString
-- status: string - new, writing, translating, verifying, completed
+- type: string - "introduction", "new release"
+- app: string
+- version: string
+- pages: GuidePageV1[]
+  - title: MultiString
+  - content: MultiString
+  - more_url: string
+  - color: string
+  - pic_id: string
+  - pic_uri: string
 - tags: string[]
+- status: string - new, writing, translating, verifying, completed
+- custom_hdr: any
+- custom_dat: any
 
 .EXAMPLE
 
-# Update existing quote
-PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Update existing guide
+PS> Update-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
 
 #>
     [CmdletBinding()]
@@ -346,16 +366,16 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/guides/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $Quote
+        [Object] $Guide
     )
     begin {}
     process 
     {
-        $route = $Uri -f $Quote.id
+        $route = $Uri -f $Guide.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Guide
         
         Write-Output $result
     }
@@ -363,16 +383,16 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
 }
 
 
-function Remove-PipQuote
+function Remove-PipGuide
 {
 <#
 .SYNOPSIS
 
-Removes quote by id
+Removes guide by id
 
 .DESCRIPTION
 
-Removes quote by its unique id
+Removes guide by its unique id
 
 .PARAMETER Connection
 
@@ -388,16 +408,16 @@ An operation method (default: 'Delete')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/guides/{0})
 
 .PARAMETER Id
 
-A quote id
+A guide id
 
 .EXAMPLE
 
-# Delete quote with id 1232
-PS> Remove-PipQuote -Name "test" -Id 123
+# Delete guide with id 1232
+PS> Remove-PipGuide -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -410,7 +430,7 @@ PS> Remove-PipQuote -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/guides/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )

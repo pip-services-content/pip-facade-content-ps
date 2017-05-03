@@ -1,22 +1,22 @@
 ########################################################
 ##
-## Quotes.ps1
+## EmailTemplates.ps1
 ## Client facade to content management Pip.Services
-## Quotes commands
+## Email templates commands
 ##
 #######################################################
 
 
-function Get-PipQuotes
+function Get-PipEmailTemplates
 {
 <#
 .SYNOPSIS
 
-Gets page with quotes by specified criteria
+Gets page with email templates by specified criteria
 
 .DESCRIPTION
 
-Gets a page with quotes that satisfy specified criteria
+Gets a page with email templates that satisfy specified criteria
 
 .PARAMETER Connection
 
@@ -32,7 +32,7 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes)
+An operation uri (default: /api/1.0/email_templates)
 
 .PARAMETER Filter
 
@@ -52,8 +52,8 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 quotes from test cluster that contain 'abc' string
-PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
+# Read top 10 email templates from test cluster that contain 'abc' string
+PS> Get-PipEmailTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -66,7 +66,7 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes",
+        [string] $Uri = "/api/1.0/email_templates",
         [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Filter = @{},
         [Parameter(Mandatory=$false, Position = 1, ValueFromPipelineByPropertyName=$true)]
@@ -96,16 +96,16 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
 }
 
 
-function Get-PipQuote
+function Get-PipEmailTemplate
 {
 <#
 .SYNOPSIS
 
-Gets quote by id
+Gets email template by id
 
 .DESCRIPTION
 
-Gets quote by its unique id
+Gets email template by its unique id
 
 .PARAMETER Connection
 
@@ -121,16 +121,16 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/email_templates/{0})
 
 .PARAMETER Id
 
-A quote id
+A email template id
 
 .EXAMPLE
 
-# Gets quote with id 1232
-PS> Get-PipQuote -Name "test" -Id 123
+# Gets email_template with id 1232
+PS> Get-PipEmailTemplate -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -143,7 +143,7 @@ PS> Get-PipQuote -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/email_templates/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )
@@ -160,81 +160,16 @@ PS> Get-PipQuote -Name "test" -Id 123
 }
 
 
-function Get-PipRandomQuote
+function New-PipEmailTemplate
 {
 <#
 .SYNOPSIS
 
-Gets a random quote
+Creates a new email template
 
 .DESCRIPTION
 
-Gets a random quote
-
-.PARAMETER Connection
-
-A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
-
-.PARAMETER Method
-
-An operation method (default: 'Get')
-
-.PARAMETER Uri
-
-An operation uri (default: /api/1.0/quotes/random)
-
-.PARAMETER Filter
-
-A filter with search criteria (default: no filter)
-
-.EXAMPLE
-
-# Gets a random
-PS> Get-PipRandomQuote -Name "test"
-
-#>
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Method = "Get",
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/random",
-        [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Hashtable] $Filter = @{}
-    )
-    begin {}
-    process 
-    {
-        $route = $Uri
-        $params = $Filter
-
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
-        
-        Write-Output $result
-    }
-    end {}
-}
-
-
-function New-PipQuote
-{
-<#
-.SYNOPSIS
-
-Creates a new quote
-
-.DESCRIPTION
-
-Creates a new quote
+Creates a new email template
 
 .PARAMETER Connection
 
@@ -250,21 +185,25 @@ An operation method (default: 'Post')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes)
+An operation uri (default: /api/1.0/email_templates)
 
-.PARAMETER Quote
+.PARAMETER EmailTemplate
 
-A quote with the following structure:
+A email template with the following structure:
 - id: string
+- name: string
+- from: string
+- reply_to: string
+- subject: MultiString
 - text: MultiString
-- author: MultiString
+- html: MultiString
 - status: string - new, writing, translating, verifying, completed
-- tags: string[]
+
 
 .EXAMPLE
 
-# Creates a new quote
-PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Creates a new email template
+PS> New-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -277,16 +216,16 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes",
+        [string] $Uri = "/api/1.0/email_templates",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $Quote
+        [Object] $EmailTemplate
     )
     begin {}
     process 
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $EmailTemplate
         
         Write-Output $result
     }
@@ -294,16 +233,16 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
 }
 
 
-function Update-PipQuote
+function Update-PipEmailTemplate
 {
 <#
 .SYNOPSIS
 
-Creates a new quote
+Creates a new email template
 
 .DESCRIPTION
 
-Creates a new quote
+Creates a new email template
 
 .PARAMETER Connection
 
@@ -319,21 +258,25 @@ An operation method (default: 'Put')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/email_templates/{0})
 
-.PARAMETER Quote
+.PARAMETER EmailTemplate
 
-A quote with the following structure:
+A email template with the following structure:
 - id: string
+- name: string
+- from: string
+- reply_to: string
+- subject: MultiString
 - text: MultiString
-- author: MultiString
+- html: MultiString
 - status: string - new, writing, translating, verifying, completed
-- tags: string[]
+
 
 .EXAMPLE
 
-# Update existing quote
-PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Update existing email template
+PS> Update-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -346,16 +289,16 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/email_templates/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $Quote
+        [Object] $EmailTemplate
     )
     begin {}
     process 
     {
-        $route = $Uri -f $Quote.id
+        $route = $Uri -f $EmailTemplate.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $EmailTemplate
         
         Write-Output $result
     }
@@ -363,16 +306,16 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
 }
 
 
-function Remove-PipQuote
+function Remove-PipEmailTemplate
 {
 <#
 .SYNOPSIS
 
-Removes quote by id
+Removes email template by id
 
 .DESCRIPTION
 
-Removes quote by its unique id
+Removes email template by its unique id
 
 .PARAMETER Connection
 
@@ -388,16 +331,16 @@ An operation method (default: 'Delete')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/email_templates/{0})
 
 .PARAMETER Id
 
-A quote id
+A email template id
 
 .EXAMPLE
 
-# Delete quote with id 1232
-PS> Remove-PipQuote -Name "test" -Id 123
+# Delete email template with id 1232
+PS> Remove-PipEmailTemplate -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -410,7 +353,7 @@ PS> Remove-PipQuote -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/email_templates/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )

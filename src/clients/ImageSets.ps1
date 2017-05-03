@@ -1,22 +1,22 @@
 ########################################################
 ##
-## Quotes.ps1
+## ImageSets.ps1
 ## Client facade to content management Pip.Services
-## Quotes commands
+## ImageSets commands
 ##
 #######################################################
 
 
-function Get-PipQuotes
+function Get-PipImageSets
 {
 <#
 .SYNOPSIS
 
-Gets page with quotes by specified criteria
+Gets page with imagesets by specified criteria
 
 .DESCRIPTION
 
-Gets a page with quotes that satisfy specified criteria
+Gets a page with imagesets that satisfy specified criteria
 
 .PARAMETER Connection
 
@@ -32,7 +32,7 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes)
+An operation uri (default: /api/1.0/imagesets)
 
 .PARAMETER Filter
 
@@ -52,8 +52,8 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 quotes from test cluster that contain 'abc' string
-PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
+# Read top 10 imagesets from test cluster that contain 'abc' string
+PS> Get-PipImageSets -Name "test" -Filter @{ tags="goals,success" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -66,7 +66,7 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes",
+        [string] $Uri = "/api/1.0/imagesets",
         [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Filter = @{},
         [Parameter(Mandatory=$false, Position = 1, ValueFromPipelineByPropertyName=$true)]
@@ -96,16 +96,16 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
 }
 
 
-function Get-PipQuote
+function Get-PipImageSet
 {
 <#
 .SYNOPSIS
 
-Gets quote by id
+Gets imageset by id
 
 .DESCRIPTION
 
-Gets quote by its unique id
+Gets imageset by its unique id
 
 .PARAMETER Connection
 
@@ -121,16 +121,16 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/imagesets/{0})
 
 .PARAMETER Id
 
-A quote id
+A imageset id
 
 .EXAMPLE
 
-# Gets quote with id 1232
-PS> Get-PipQuote -Name "test" -Id 123
+# Gets imageset with id 1232
+PS> Get-PipImageSet -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -143,7 +143,7 @@ PS> Get-PipQuote -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/imagesets/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )
@@ -160,81 +160,16 @@ PS> Get-PipQuote -Name "test" -Id 123
 }
 
 
-function Get-PipRandomQuote
+function New-PipImageSet
 {
 <#
 .SYNOPSIS
 
-Gets a random quote
+Creates a new imageset
 
 .DESCRIPTION
 
-Gets a random quote
-
-.PARAMETER Connection
-
-A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
-
-.PARAMETER Method
-
-An operation method (default: 'Get')
-
-.PARAMETER Uri
-
-An operation uri (default: /api/1.0/quotes/random)
-
-.PARAMETER Filter
-
-A filter with search criteria (default: no filter)
-
-.EXAMPLE
-
-# Gets a random
-PS> Get-PipRandomQuote -Name "test"
-
-#>
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Method = "Get",
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/random",
-        [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Hashtable] $Filter = @{}
-    )
-    begin {}
-    process 
-    {
-        $route = $Uri
-        $params = $Filter
-
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
-        
-        Write-Output $result
-    }
-    end {}
-}
-
-
-function New-PipQuote
-{
-<#
-.SYNOPSIS
-
-Creates a new quote
-
-.DESCRIPTION
-
-Creates a new quote
+Creates a new imageset
 
 .PARAMETER Connection
 
@@ -250,21 +185,22 @@ An operation method (default: 'Post')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes)
+An operation uri (default: /api/1.0/imagesets)
 
-.PARAMETER Quote
+.PARAMETER ImageSet
 
-A quote with the following structure:
-- id: string
-- text: MultiString
-- author: MultiString
-- status: string - new, writing, translating, verifying, completed
-- tags: string[]
+A imageset with the following structure:
+- id: string;
+- title: string
+- pics: AttachmentV1[]
+  - id: string
+  - uri: string
+- tags: string[];
 
 .EXAMPLE
 
-# Creates a new quote
-PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Creates a new imageset
+PS> New-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
 
 #>
     [CmdletBinding()]
@@ -277,16 +213,16 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes",
+        [string] $Uri = "/api/1.0/imagesets",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $Quote
+        [Object] $ImageSet
     )
     begin {}
     process 
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $ImageSet
         
         Write-Output $result
     }
@@ -294,16 +230,16 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
 }
 
 
-function Update-PipQuote
+function Update-PipImageSet
 {
 <#
 .SYNOPSIS
 
-Creates a new quote
+Creates a new imageset
 
 .DESCRIPTION
 
-Creates a new quote
+Creates a new imageset
 
 .PARAMETER Connection
 
@@ -319,21 +255,22 @@ An operation method (default: 'Put')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/imagesets/{0})
 
-.PARAMETER Quote
+.PARAMETER ImageSet
 
-A quote with the following structure:
-- id: string
-- text: MultiString
-- author: MultiString
-- status: string - new, writing, translating, verifying, completed
-- tags: string[]
+A imageset with the following structure:
+- id: string;
+- title: string
+- pics: AttachmentV1[]
+  - id: string
+  - uri: string
+- tags: string[];
 
 .EXAMPLE
 
-# Update existing quote
-PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Update existing imageset
+PS> Update-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
 
 #>
     [CmdletBinding()]
@@ -346,16 +283,16 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/imagesets/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $Quote
+        [Object] $ImageSet
     )
     begin {}
     process 
     {
-        $route = $Uri -f $Quote.id
+        $route = $Uri -f $ImageSet.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $ImageSet
         
         Write-Output $result
     }
@@ -363,16 +300,16 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
 }
 
 
-function Remove-PipQuote
+function Remove-PipImageSet
 {
 <#
 .SYNOPSIS
 
-Removes quote by id
+Removes imageset by id
 
 .DESCRIPTION
 
-Removes quote by its unique id
+Removes imageset by its unique id
 
 .PARAMETER Connection
 
@@ -388,16 +325,16 @@ An operation method (default: 'Delete')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/quotes/{0})
+An operation uri (default: /api/1.0/imagesets/{0})
 
 .PARAMETER Id
 
-A quote id
+A imageset id
 
 .EXAMPLE
 
-# Delete quote with id 1232
-PS> Remove-PipQuote -Name "test" -Id 123
+# Delete imageset with id 1232
+PS> Remove-PipImageSet -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -410,7 +347,7 @@ PS> Remove-PipQuote -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/quotes/{0}",
+        [string] $Uri = "/api/1.0/imagesets/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )
