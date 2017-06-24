@@ -15,3 +15,5 @@ if ($path -eq "") { $path = "." }
 . "$($path)/src/clients/Tips.ps1"
 . "$($path)/src/clients/ImageSets.ps1"
 . "$($path)/src/clients/EmailTemplates.ps1"
+. "$($path)/src/clients/Guides.ps1"
+. "$($path)/src/clients/Dashboards.ps1"
