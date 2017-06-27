@@ -22,10 +22,6 @@ Gets a page with tips that satisfy specified criteria
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -52,8 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 tips from test cluster that contain 'abc' string
-PS> Get-PipTips -Name "test" -Filter @{ tags="goals,success" } -Take 10
+Get-PipTips -Filter @{ tags="goals,success" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -61,8 +56,6 @@ PS> Get-PipTips -Name "test" -Filter @{ tags="goals,success" } -Take 10
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -88,7 +81,7 @@ PS> Get-PipTips -Name "test" -Filter @{ tags="goals,success" } -Take 10
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -111,10 +104,6 @@ Gets tip by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -129,8 +118,7 @@ A tip id
 
 .EXAMPLE
 
-# Gets tip with id 1232
-PS> Get-PipTip -Name "test" -Id 123
+Get-PipTip -Id 123
 
 #>
     [CmdletBinding()]
@@ -138,8 +126,6 @@ PS> Get-PipTip -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -152,7 +138,7 @@ PS> Get-PipTip -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -175,10 +161,6 @@ Gets a random tip
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -193,8 +175,7 @@ A filter with search criteria (default: no filter)
 
 .EXAMPLE
 
-# Gets a random
-PS> Get-PipRandomTip -Name "test"
+Get-PipRandomTip
 
 #>
     [CmdletBinding()]
@@ -202,8 +183,6 @@ PS> Get-PipRandomTip -Name "test"
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -217,7 +196,7 @@ PS> Get-PipRandomTip -Name "test"
         $route = $Uri
         $params = $Filter
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
         
         Write-Output $result
     }
@@ -239,10 +218,6 @@ Creates a new tip
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -274,8 +249,7 @@ A tip with the following structure:
 
 .EXAMPLE
 
-# Creates a new tip
-PS> New-PipTip -Name "test" -Tip @{ topics=@("myapp", "useful"); title=@{ en="Do you know how to?" }; content=@{ en="Just press the button..." }; status="completed" }
+New-PipTip -Tip @{ topics=@("myapp", "useful"); title=@{ en="Do you know how to?" }; content=@{ en="Just press the button..." }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -283,8 +257,6 @@ PS> New-PipTip -Name "test" -Tip @{ topics=@("myapp", "useful"); title=@{ en="Do
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -297,7 +269,7 @@ PS> New-PipTip -Name "test" -Tip @{ topics=@("myapp", "useful"); title=@{ en="Do
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Tip
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Tip
         
         Write-Output $result
     }
@@ -319,10 +291,6 @@ Creates a new tip
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -354,8 +322,7 @@ A tip with the following structure:
 
 .EXAMPLE
 
-# Update existing tip
-PS> Update-PipTip -Name "test" -Tip @{ id="123"; topics=@("myapp", "useful"); title=@{ en="Do you know how to?" }; content=@{ en="Just press the button..." }; status="completed" }
+Update-PipTip -Tip @{ id="123"; topics=@("myapp", "useful"); title=@{ en="Do you know how to?" }; content=@{ en="Just press the button..." }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -363,8 +330,6 @@ PS> Update-PipTip -Name "test" -Tip @{ id="123"; topics=@("myapp", "useful"); ti
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -377,7 +342,7 @@ PS> Update-PipTip -Name "test" -Tip @{ id="123"; topics=@("myapp", "useful"); ti
     {
         $route = $Uri -f $Tip.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Tip
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Tip
         
         Write-Output $result
     }
@@ -400,10 +365,6 @@ Removes tip by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Delete')
@@ -418,8 +379,7 @@ A tip id
 
 .EXAMPLE
 
-# Delete tip with id 1232
-PS> Remove-PipTip -Name "test" -Id 123
+Remove-PipTip -Id 123
 
 #>
     [CmdletBinding()]
@@ -427,8 +387,6 @@ PS> Remove-PipTip -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -441,7 +399,7 @@ PS> Remove-PipTip -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }

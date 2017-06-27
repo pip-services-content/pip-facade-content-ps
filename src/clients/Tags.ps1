@@ -22,10 +22,6 @@ Gets tags by party unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -40,8 +36,7 @@ A party unique id
 
 .EXAMPLE
 
-# Gets tags for party 1232
-PS> Get-PipTags -Name "test" -Id 123
+Get-PipTags -Id 123
 
 #>
     [CmdletBinding()]
@@ -49,8 +44,6 @@ PS> Get-PipTags -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -63,7 +56,7 @@ PS> Get-PipTags -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -86,10 +79,6 @@ Sets search tags for a party
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Post')
@@ -109,8 +98,7 @@ A tag with the following structure:
 
 .EXAMPLE
 
-# Sets tags for party 123
-PS> Set-PipTags -Name "test" -Id 123 -Tags @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+Set-PipTags -Id 123 -Tags @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -118,8 +106,6 @@ PS> Set-PipTags -Name "test" -Id 123 -Tags @{ text=@{ en="Hurry slowly" }; autho
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -132,7 +118,7 @@ PS> Set-PipTags -Name "test" -Id 123 -Tags @{ text=@{ en="Hurry slowly" }; autho
     {
         $route = $Uri -f $Tags.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Tags
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Tags
         
         Write-Output $result
     }
@@ -155,10 +141,6 @@ Adds new search tags for a party specified by id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Put')
@@ -177,8 +159,7 @@ A list of search tags
 
 .EXAMPLE
 
-# Records search tags for party 123
-PS> Update-PipTags -Name "test" -Party -Tags @("tag1", "tag2")
+Update-PipTags -Party -Tags @("tag1", "tag2")
 
 #>
     [CmdletBinding()]
@@ -186,8 +167,6 @@ PS> Update-PipTags -Name "test" -Party -Tags @("tag1", "tag2")
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -202,7 +181,7 @@ PS> Update-PipTags -Name "test" -Party -Tags @("tag1", "tag2")
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Tags
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Tags
         
         Write-Output $result
     }

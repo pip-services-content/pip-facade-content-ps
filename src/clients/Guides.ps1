@@ -22,10 +22,6 @@ Gets a page with guides that satisfy specified criteria
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -52,8 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 guides from test cluster that contain 'abc' string
-PS> Get-PipGuides -Name "test" -Filter @{ tags="goals,success" } -Take 10
+Get-PipGuides -Filter @{ tags="goals,success" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -61,8 +56,6 @@ PS> Get-PipGuides -Name "test" -Filter @{ tags="goals,success" } -Take 10
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -88,7 +81,7 @@ PS> Get-PipGuides -Name "test" -Filter @{ tags="goals,success" } -Take 10
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -111,10 +104,6 @@ Gets guide by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -130,7 +119,7 @@ A guide id
 .EXAMPLE
 
 # Gets guide with id 1232
-PS> Get-PipGuide -Name "test" -Id 123
+Get-PipGuide -Id 123
 
 #>
     [CmdletBinding()]
@@ -138,8 +127,6 @@ PS> Get-PipGuide -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -152,7 +139,7 @@ PS> Get-PipGuide -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -175,10 +162,6 @@ Gets a random guide
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -193,8 +176,7 @@ A filter with search criteria (default: no filter)
 
 .EXAMPLE
 
-# Gets a random
-PS> Get-PipRandomGuide -Name "test"
+Get-PipRandomGuide
 
 #>
     [CmdletBinding()]
@@ -202,8 +184,6 @@ PS> Get-PipRandomGuide -Name "test"
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -217,7 +197,7 @@ PS> Get-PipRandomGuide -Name "test"
         $route = $Uri
         $params = $Filter
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
         
         Write-Output $result
     }
@@ -239,10 +219,6 @@ Creates a new guide
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -273,8 +249,7 @@ A guide with the following structure:
 
 .EXAMPLE
 
-# Creates a new guide
-PS> New-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
+New-PipGuide -Guide @{ type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
 
 #>
     [CmdletBinding()]
@@ -282,8 +257,6 @@ PS> New-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pages=
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -296,7 +269,7 @@ PS> New-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pages=
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Guide
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Guide
         
         Write-Output $result
     }
@@ -318,10 +291,6 @@ Creates a new guide
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -352,8 +321,7 @@ A guide with the following structure:
 
 .EXAMPLE
 
-# Update existing guide
-PS> Update-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
+Update-PipGuide -Guide @{ type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
 
 #>
     [CmdletBinding()]
@@ -361,8 +329,6 @@ PS> Update-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pag
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -375,7 +341,7 @@ PS> Update-PipGuide -Name "test" -Guide @{ type="introduction"; app="MyApp"; pag
     {
         $route = $Uri -f $Guide.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Guide
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Guide
         
         Write-Output $result
     }
@@ -398,10 +364,6 @@ Removes guide by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Delete')
@@ -416,8 +378,7 @@ A guide id
 
 .EXAMPLE
 
-# Delete guide with id 1232
-PS> Remove-PipGuide -Name "test" -Id 123
+Remove-PipGuide -Id 123
 
 #>
     [CmdletBinding()]
@@ -425,8 +386,6 @@ PS> Remove-PipGuide -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -439,7 +398,7 @@ PS> Remove-PipGuide -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }

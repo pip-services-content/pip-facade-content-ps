@@ -22,10 +22,6 @@ Gets a page with quotes that satisfy specified criteria
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -52,8 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 quotes from test cluster that contain 'abc' string
-PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
+Get-PipQuotes -Filter @{ tags="goals,success" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -61,8 +56,6 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -88,7 +81,7 @@ PS> Get-PipQuotes -Name "test" -Filter @{ tags="goals,success" } -Take 10
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -111,10 +104,6 @@ Gets quote by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -129,8 +118,7 @@ A quote id
 
 .EXAMPLE
 
-# Gets quote with id 1232
-PS> Get-PipQuote -Name "test" -Id 123
+Get-PipQuote -Id 123
 
 #>
     [CmdletBinding()]
@@ -138,8 +126,6 @@ PS> Get-PipQuote -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -152,7 +138,7 @@ PS> Get-PipQuote -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -175,10 +161,6 @@ Gets a random quote
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -193,8 +175,7 @@ A filter with search criteria (default: no filter)
 
 .EXAMPLE
 
-# Gets a random
-PS> Get-PipRandomQuote -Name "test"
+Get-PipRandomQuote
 
 #>
     [CmdletBinding()]
@@ -202,8 +183,6 @@ PS> Get-PipRandomQuote -Name "test"
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -217,7 +196,7 @@ PS> Get-PipRandomQuote -Name "test"
         $route = $Uri
         $params = $Filter
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
         
         Write-Output $result
     }
@@ -240,10 +219,6 @@ Creates a new quote
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Post')
@@ -263,8 +238,7 @@ A quote with the following structure:
 
 .EXAMPLE
 
-# Creates a new quote
-PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+New-PipQuote -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -272,8 +246,6 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -286,7 +258,7 @@ PS> New-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ e
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Quote
         
         Write-Output $result
     }
@@ -309,10 +281,6 @@ Creates a new quote
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Put')
@@ -332,8 +300,7 @@ A quote with the following structure:
 
 .EXAMPLE
 
-# Update existing quote
-PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+Update-PipQuote -Quote @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -341,8 +308,6 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -355,7 +320,7 @@ PS> Update-PipQuote -Name "test" -Quote @{ text=@{ en="Hurry slowly" }; author=@
     {
         $route = $Uri -f $Quote.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Quote
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Quote
         
         Write-Output $result
     }
@@ -378,10 +343,6 @@ Removes quote by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Delete')
@@ -396,8 +357,7 @@ A quote id
 
 .EXAMPLE
 
-# Delete quote with id 1232
-PS> Remove-PipQuote -Name "test" -Id 123
+Remove-PipQuote -Id 123
 
 #>
     [CmdletBinding()]
@@ -405,8 +365,6 @@ PS> Remove-PipQuote -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -419,7 +377,7 @@ PS> Remove-PipQuote -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }

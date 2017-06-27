@@ -22,10 +22,6 @@ Gets a page with file groups
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -48,8 +44,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 file groups from test cluster
-PS> Get-PipFileGroups -Name "test" -Take 10
+Get-PipFileGroups -Take 10
 
 #>
     [CmdletBinding()]
@@ -57,8 +52,6 @@ PS> Get-PipFileGroups -Name "test" -Take 10
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -82,7 +75,7 @@ PS> Get-PipFileGroups -Name "test" -Take 10
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -104,10 +97,6 @@ Gets a page with files that satisfy specified criteria
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -135,8 +124,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 files from test cluster that contain 'abc' string
-PS> Get-PipFiles -Name "test" -Filter @{ search="abc" } -Take 10
+Get-PipFiles -Filter @{ search="abc" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -144,8 +132,6 @@ PS> Get-PipFiles -Name "test" -Filter @{ search="abc" } -Take 10
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -171,7 +157,7 @@ PS> Get-PipFiles -Name "test" -Filter @{ search="abc" } -Take 10
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -194,10 +180,6 @@ Gets file by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -212,8 +194,7 @@ A file id
 
 .EXAMPLE
 
-# Gets file with id 1232
-PS> Get-PipFile -Name "test" -Id 123
+Get-PipFile -Id 123
 
 #>
     [CmdletBinding()]
@@ -221,8 +202,6 @@ PS> Get-PipFile -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -235,7 +214,7 @@ PS> Get-PipFile -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -257,10 +236,6 @@ Creates a new file
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -289,8 +264,7 @@ A file with the following structure
 
 .EXAMPLE
 
-# Creates a new file
-PS> New-PipFile -Name "test" -File @{ name="picture123.jpg"; group="pictures"; description="A test picture"; content_uri="http://somewhere.com/picture123.jpg" }
+New-PipFile -File @{ name="picture123.jpg"; group="pictures"; description="A test picture"; content_uri="http://somewhere.com/picture123.jpg" }
 
 #>
     [CmdletBinding()]
@@ -298,8 +272,6 @@ PS> New-PipFile -Name "test" -File @{ name="picture123.jpg"; group="pictures"; d
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -312,7 +284,7 @@ PS> New-PipFile -Name "test" -File @{ name="picture123.jpg"; group="pictures"; d
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $File
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $File
         
         Write-Output $result
     }
@@ -334,10 +306,6 @@ Creates a new file
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -366,8 +334,7 @@ A file with the following structure
 
 .EXAMPLE
 
-# Update existing file
-PS> Update-PipFile -Name "test" -File @{ id="123"; name="picture123.jpg"; group="pictures"; description="A test picture"; content_uri="http://somewhere.com/picture123.jpg" }
+Update-PipFile -File @{ id="123"; name="picture123.jpg"; group="pictures"; description="A test picture"; content_uri="http://somewhere.com/picture123.jpg" }
 
 #>
     [CmdletBinding()]
@@ -375,8 +342,6 @@ PS> Update-PipFile -Name "test" -File @{ id="123"; name="picture123.jpg"; group=
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -389,7 +354,7 @@ PS> Update-PipFile -Name "test" -File @{ id="123"; name="picture123.jpg"; group=
     {
         $route = $Uri -f $File.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $File
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $File
         
         Write-Output $result
     }
@@ -412,10 +377,6 @@ Removes file by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Delete')
@@ -430,8 +391,7 @@ A file id
 
 .EXAMPLE
 
-# Delete file with id 1232
-PS> Remove-PipFile -Name "test" -Id 123
+Remove-PipFile -Id 123
 
 #>
     [CmdletBinding()]
@@ -439,8 +399,6 @@ PS> Remove-PipFile -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -453,7 +411,7 @@ PS> Remove-PipFile -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }

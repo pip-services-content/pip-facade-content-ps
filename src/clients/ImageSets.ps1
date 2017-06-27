@@ -22,10 +22,6 @@ Gets a page with imagesets that satisfy specified criteria
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -52,8 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 imagesets from test cluster that contain 'abc' string
-PS> Get-PipImageSets -Name "test" -Filter @{ tags="goals,success" } -Take 10
+Get-PipImageSets -Filter @{ tags="goals,success" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -61,8 +56,6 @@ PS> Get-PipImageSets -Name "test" -Filter @{ tags="goals,success" } -Take 10
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -88,7 +81,7 @@ PS> Get-PipImageSets -Name "test" -Filter @{ tags="goals,success" } -Take 10
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -111,10 +104,6 @@ Gets imageset by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -129,8 +118,7 @@ A imageset id
 
 .EXAMPLE
 
-# Gets imageset with id 1232
-PS> Get-PipImageSet -Name "test" -Id 123
+Get-PipImageSet -Id 123
 
 #>
     [CmdletBinding()]
@@ -138,8 +126,6 @@ PS> Get-PipImageSet -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -152,7 +138,7 @@ PS> Get-PipImageSet -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -175,10 +161,6 @@ Creates a new imageset
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Post')
@@ -199,8 +181,7 @@ A imageset with the following structure:
 
 .EXAMPLE
 
-# Creates a new imageset
-PS> New-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
+New-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
 
 #>
     [CmdletBinding()]
@@ -208,8 +189,6 @@ PS> New-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); pics
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -222,7 +201,7 @@ PS> New-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); pics
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $ImageSet
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $ImageSet
         
         Write-Output $result
     }
@@ -245,10 +224,6 @@ Creates a new imageset
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Put')
@@ -269,8 +244,7 @@ A imageset with the following structure:
 
 .EXAMPLE
 
-# Update existing imageset
-PS> Update-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
+Update-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
 
 #>
     [CmdletBinding()]
@@ -278,8 +252,6 @@ PS> Update-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); p
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -292,7 +264,7 @@ PS> Update-PipImageSet -Name "test" -ImageSet @{ title="Cats"; tags=@("cats"); p
     {
         $route = $Uri -f $ImageSet.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $ImageSet
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $ImageSet
         
         Write-Output $result
     }
@@ -315,10 +287,6 @@ Removes imageset by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Delete')
@@ -333,8 +301,7 @@ A imageset id
 
 .EXAMPLE
 
-# Delete imageset with id 1232
-PS> Remove-PipImageSet -Name "test" -Id 123
+Remove-PipImageSet -Id 123
 
 #>
     [CmdletBinding()]
@@ -342,8 +309,6 @@ PS> Remove-PipImageSet -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -356,7 +321,7 @@ PS> Remove-PipImageSet -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }

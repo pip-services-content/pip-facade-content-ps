@@ -22,10 +22,6 @@ Gets a page with email templates that satisfy specified criteria
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -52,8 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 email templates from test cluster that contain 'abc' string
-PS> Get-PipEmailTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take 10
+Get-PipEmailTemplates -Filter @{ name="Welcome Message" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -61,8 +56,6 @@ PS> Get-PipEmailTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -88,7 +81,7 @@ PS> Get-PipEmailTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -111,10 +104,6 @@ Gets email template by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -129,8 +118,7 @@ A email template id
 
 .EXAMPLE
 
-# Gets email_template with id 1232
-PS> Get-PipEmailTemplate -Name "test" -Id 123
+Get-PipEmailTemplate -Id 123
 
 #>
     [CmdletBinding()]
@@ -138,8 +126,6 @@ PS> Get-PipEmailTemplate -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -152,7 +138,7 @@ PS> Get-PipEmailTemplate -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -175,10 +161,6 @@ Creates a new email template
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Post')
@@ -199,11 +181,9 @@ A email template with the following structure:
 - html: MultiString
 - status: string - new, writing, translating, verifying, completed
 
-
 .EXAMPLE
 
-# Creates a new email template
-PS> New-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+New-PipEmailTemplate -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -211,8 +191,6 @@ PS> New-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -225,7 +203,7 @@ PS> New-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $EmailTemplate
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $EmailTemplate
         
         Write-Output $result
     }
@@ -248,10 +226,6 @@ Creates a new email template
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Put')
@@ -272,11 +246,9 @@ A email template with the following structure:
 - html: MultiString
 - status: string - new, writing, translating, verifying, completed
 
-
 .EXAMPLE
 
-# Update existing email template
-PS> Update-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+Update-PipEmailTemplate -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -284,8 +256,6 @@ PS> Update-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slo
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -298,7 +268,7 @@ PS> Update-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slo
     {
         $route = $Uri -f $EmailTemplate.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $EmailTemplate
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $EmailTemplate
         
         Write-Output $result
     }
@@ -321,10 +291,6 @@ Removes email template by its unique id
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Delete')
@@ -339,8 +305,7 @@ A email template id
 
 .EXAMPLE
 
-# Delete email template with id 1232
-PS> Remove-PipEmailTemplate -Name "test" -Id 123
+Remove-PipEmailTemplate -Id 123
 
 #>
     [CmdletBinding()]
@@ -348,8 +313,6 @@ PS> Remove-PipEmailTemplate -Name "test" -Id 123
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -362,7 +325,7 @@ PS> Remove-PipEmailTemplate -Name "test" -Id 123
     {
         $route = $Uri -f $Id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }

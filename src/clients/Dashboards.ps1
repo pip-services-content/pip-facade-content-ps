@@ -22,10 +22,6 @@ Gets a page with dashboards that satisfy specified criteria
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Get')
@@ -52,8 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 dashboards from test cluster for user 123 and testapp
-PS> Get-PipDashboards -Name "test" -Filter @{ user_id="123"; app="testapp" } -Take 10
+Get-PipDashboards -Filter @{ user_id="123"; app="testapp" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -61,8 +56,6 @@ PS> Get-PipDashboards -Name "test" -Filter @{ user_id="123"; app="testapp" } -Ta
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -88,7 +81,7 @@ PS> Get-PipDashboards -Name "test" -Filter @{ user_id="123"; app="testapp" } -Ta
             total = $Total
         }
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
 
         Write-Output $result.Data
     }
@@ -110,10 +103,6 @@ Gets user dashboard for specified application and kind
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -137,8 +126,7 @@ A dashboard kind. It allows to have more then one dashboard per application (def
 
 .EXAMPLE
 
-# Gets dashboard for user 123 and testapp
-PS> Get-PipDashboard -Name "test" -UserId 123 -App testapp
+Get-PipDashboard -UserId 123 -App testapp
 
 #>
     [CmdletBinding()]
@@ -146,8 +134,6 @@ PS> Get-PipDashboard -Name "test" -UserId 123 -App testapp
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -164,7 +150,7 @@ PS> Get-PipDashboard -Name "test" -UserId 123 -App testapp
     {
         $route = $Uri -f $UserId, $App, $Kind
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
         Write-Output $result
     }
@@ -186,10 +172,6 @@ Sets a new or an existing dashboard
 .PARAMETER Connection
 
 A connection object
-
-.PARAMETER Name
-
-A name to refer to the client facade
 
 .PARAMETER Method
 
@@ -218,8 +200,7 @@ A dashboard with the following structure:
 
 .EXAMPLE
 
-# Sets a new dashboard
-PS> New-PipDashboard -Name "test" -Dashboard @{ user_id="123"; app="MyApp"; kind="Default"; groups=@() }
+New-PipDashboard -Dashboard @{ user_id="123"; app="MyApp"; kind="Default"; groups=@() }
 
 #>
     [CmdletBinding()]
@@ -227,8 +208,6 @@ PS> New-PipDashboard -Name "test" -Dashboard @{ user_id="123"; app="MyApp"; kind
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -241,7 +220,7 @@ PS> New-PipDashboard -Name "test" -Dashboard @{ user_id="123"; app="MyApp"; kind
     {
         $route = $Uri -f $Dashboard.user_id, $Dashboard.app, $Dashboard.kind
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $Dashboard
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Dashboard
         
         Write-Output $result
     }
@@ -264,10 +243,6 @@ Removes dashboards by specified filter criteria
 
 A connection object
 
-.PARAMETER Name
-
-A name to refer to the client facade
-
 .PARAMETER Method
 
 An operation method (default: 'Delete')
@@ -282,8 +257,7 @@ A filter with search criteria (default: no filter)
 
 .EXAMPLE
 
-# Delete dashboard with id 1232
-PS> Remove-PipDashboards -Name "test" -Filter @{ user_id="123" }
+Remove-PipDashboards -Filter @{ user_id="123" }
 
 #>
     [CmdletBinding()]
@@ -291,8 +265,6 @@ PS> Remove-PipDashboards -Name "test" -Filter @{ user_id="123" }
     (
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Name,
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
@@ -306,7 +278,7 @@ PS> Remove-PipDashboards -Name "test" -Filter @{ user_id="123" }
         $route = $Uri
         $params = $Filter
 
-        $null = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Params $params
+        $null = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
     }
     end {}
 }
