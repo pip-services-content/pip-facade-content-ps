@@ -1,22 +1,22 @@
 ########################################################
 ##
-## ImageSets.ps1
+## Dashboards.ps1
 ## Client facade to content management Pip.Services
-## ImageSets commands
+## Dashboards commands
 ##
 #######################################################
 
 
-function Get-PipImageSets
+function Get-PipDashboards
 {
 <#
 .SYNOPSIS
 
-Gets page with imagesets by specified criteria
+Gets page with dashboards by specified criteria
 
 .DESCRIPTION
 
-Gets a page with imagesets that satisfy specified criteria
+Gets a page with dashboards that satisfy specified criteria
 
 .PARAMETER Connection
 
@@ -28,7 +28,7 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets)
+An operation uri (default: /api/1.0/dashboards)
 
 .PARAMETER Filter
 
@@ -48,7 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-Get-PipImageSets -Filter @{ tags="goals,success" } -Take 10
+Get-PipDashboards -Filter @{ user_id="123"; app="testapp" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -59,7 +59,7 @@ Get-PipImageSets -Filter @{ tags="goals,success" } -Take 10
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets",
+        [string] $Uri = "/api/1.0/dashboards",
         [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Filter = @{},
         [Parameter(Mandatory=$false, Position = 1, ValueFromPipelineByPropertyName=$true)]
@@ -89,16 +89,16 @@ Get-PipImageSets -Filter @{ tags="goals,success" } -Take 10
 }
 
 
-function Get-PipImageSet
+function Get-PipDashboard
 {
 <#
 .SYNOPSIS
 
-Gets imageset by id
+Gets user dashboard for specified application and kind
 
 .DESCRIPTION
 
-Gets imageset by its unique id
+Gets user dashboard for specified application and kind
 
 .PARAMETER Connection
 
@@ -110,15 +110,23 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets/{0})
+An operation uri (default: /api/1.0/dashboards/{0}/{1}/{2})
 
-.PARAMETER Id
+.PARAMETER UserId
 
-A imageset id
+A unique user id
+
+.PARAMETER App
+
+Application name
+
+.PARAMETER Kind
+
+A dashboard kind. It allows to have more then one dashboard per application (default value: 'default')
 
 .EXAMPLE
 
-Get-PipImageSet -Id 123
+Get-PipDashboard -UserId 123 -App testapp
 
 #>
     [CmdletBinding()]
@@ -129,14 +137,18 @@ Get-PipImageSet -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets/{0}",
+        [string] $Uri = "/api/1.0/dashboards/{0}/{1}/{2}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [string] $Id
+        [string] $UserId,
+        [Parameter(Mandatory=$true, Position = 1, ValueFromPipelineByPropertyName=$true)]
+        [string] $App,
+        [Parameter(Mandatory=$false, Position = 2, ValueFromPipelineByPropertyName=$true)]
+        [string] $Kind = "default"
     )
     begin {}
     process 
     {
-        $route = $Uri -f $Id
+        $route = $Uri -f $UserId, $App, $Kind
 
         $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
         
@@ -146,16 +158,16 @@ Get-PipImageSet -Id 123
 }
 
 
-function New-PipImageSet
+function Set-PipDashboard
 {
 <#
 .SYNOPSIS
 
-Creates a new imageset
+Sets a new or an existing dashboard
 
 .DESCRIPTION
 
-Creates a new imageset
+Sets a new or an existing dashboard
 
 .PARAMETER Connection
 
@@ -167,21 +179,28 @@ An operation method (default: 'Post')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets)
+An operation uri (default: /api/1.0/dashboards/{0}/{1}/{2})
 
-.PARAMETER ImageSet
+.PARAMETER Dashboard
 
-A imageset with the following structure:
-- id: string;
-- title: string
-- pics: AttachmentV1[]
-  - id: string
-  - uri: string
-- tags: string[];
+A dashboard with the following structure:
+- id: string
+- user_id: string
+- app: string
+- kind: string
+- groups: TileGroupV1[]
+  - title: string
+  - index: number
+  - tiles: TileV1[]
+    - title: string
+    - index: number
+    - color: string
+    - size: string
+    - params: any
 
 .EXAMPLE
 
-New-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
+New-PipDashboard -Dashboard @{ user_id="123"; app="MyApp"; kind="Default"; groups=@() }
 
 #>
     [CmdletBinding()]
@@ -192,16 +211,16 @@ New-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets",
+        [string] $Uri = "/api/1.0/dashboards/{0}/{1}/{2}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $ImageSet
+        [Object] $Dashboard
     )
     begin {}
     process 
     {
-        $route = $Uri
+        $route = $Uri -f $Dashboard.user_id, $Dashboard.app, $Dashboard.kind
 
-        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $ImageSet
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Dashboard
         
         Write-Output $result
     }
@@ -209,79 +228,16 @@ New-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @
 }
 
 
-function Update-PipImageSet
+function Remove-PipDashboards
 {
 <#
 .SYNOPSIS
 
-Creates a new imageset
+Removes dashboards by specified filter criteria
 
 .DESCRIPTION
 
-Creates a new imageset
-
-.PARAMETER Connection
-
-A connection object
-
-.PARAMETER Method
-
-An operation method (default: 'Put')
-
-.PARAMETER Uri
-
-An operation uri (default: /api/1.0/imagesets/{0})
-
-.PARAMETER ImageSet
-
-A imageset with the following structure:
-- id: string;
-- title: string
-- pics: AttachmentV1[]
-  - id: string
-  - uri: string
-- tags: string[];
-
-.EXAMPLE
-
-Update-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
-
-#>
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Method = "Put",
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets/{0}",
-        [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $ImageSet
-    )
-    begin {}
-    process 
-    {
-        $route = $Uri -f $ImageSet.id
-
-        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $ImageSet
-        
-        Write-Output $result
-    }
-    end {}
-}
-
-
-function Remove-PipImageSet
-{
-<#
-.SYNOPSIS
-
-Removes imageset by id
-
-.DESCRIPTION
-
-Removes imageset by its unique id
+Removes dashboards by specified filter criteria
 
 .PARAMETER Connection
 
@@ -293,15 +249,15 @@ An operation method (default: 'Delete')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets/{0})
+An operation uri (default: /api/1.0/dashboards)
 
-.PARAMETER Id
+.PARAMETER Filter
 
-A imageset id
+A filter with search criteria (default: no filter)
 
 .EXAMPLE
 
-Remove-PipImageSet -Id 123
+Remove-PipDashboards -Filter @{ user_id="123" }
 
 #>
     [CmdletBinding()]
@@ -312,18 +268,17 @@ Remove-PipImageSet -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets/{0}",
-        [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [string] $Id
+        [string] $Uri = "/api/1.0/dashboards",
+        [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Hashtable] $Filter = @{}
     )
     begin {}
     process 
     {
-        $route = $Uri -f $Id
+        $route = $Uri
+        $params = $Filter
 
-        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route
-        
-        Write-Output $result
+        $null = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
     }
     end {}
 }
