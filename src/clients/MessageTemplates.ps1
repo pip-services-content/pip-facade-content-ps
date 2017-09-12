@@ -1,22 +1,22 @@
 ########################################################
 ##
-## EmailTemplates.ps1
+## MessageTemplates.ps1
 ## Client facade to content management Pip.Services
-## Email templates commands
+## Message templates commands
 ##
 #######################################################
 
 
-function Get-PipEmailTemplates
+function Get-PipMessageTemplates
 {
 <#
 .SYNOPSIS
 
-Gets page with email templates by specified criteria
+Gets page with message templates by specified criteria
 
 .DESCRIPTION
 
-Gets a page with email templates that satisfy specified criteria
+Gets a page with message templates that satisfy specified criteria
 
 .PARAMETER Connection
 
@@ -32,7 +32,7 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/email_templates)
+An operation uri (default: /api/1.0/msg_templates)
 
 .PARAMETER Filter
 
@@ -52,8 +52,8 @@ A include total count (default: false)
 
 .EXAMPLE
 
-# Read top 10 email templates from test cluster that contain 'abc' string
-PS> Get-PipEmailTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take 10
+# Read top 10 message templates from test cluster that contain 'abc' string
+PS> Get-PipMessageTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -66,7 +66,7 @@ PS> Get-PipEmailTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/email_templates",
+        [string] $Uri = "/api/1.0/msg_templates",
         [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Filter = @{},
         [Parameter(Mandatory=$false, Position = 1, ValueFromPipelineByPropertyName=$true)]
@@ -96,16 +96,16 @@ PS> Get-PipEmailTemplates -Name "test" -Filter @{ name="Welcome Message" } -Take
 }
 
 
-function Get-PipEmailTemplate
+function Get-PipMessageTemplate
 {
 <#
 .SYNOPSIS
 
-Gets email template by id
+Gets message template by id
 
 .DESCRIPTION
 
-Gets email template by its unique id
+Gets message template by its unique id
 
 .PARAMETER Connection
 
@@ -121,16 +121,16 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/email_templates/{0})
+An operation uri (default: /api/1.0/msg_templates/{0})
 
 .PARAMETER Id
 
-A email template id
+A message template id
 
 .EXAMPLE
 
-# Gets email_template with id 1232
-PS> Get-PipEmailTemplate -Name "test" -Id 123
+# Gets msg_template with id 1232
+PS> Get-PipMessageTemplate -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -143,7 +143,7 @@ PS> Get-PipEmailTemplate -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/email_templates/{0}",
+        [string] $Uri = "/api/1.0/msg_templates/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )
@@ -160,16 +160,16 @@ PS> Get-PipEmailTemplate -Name "test" -Id 123
 }
 
 
-function New-PipEmailTemplate
+function New-PipMessageTemplate
 {
 <#
 .SYNOPSIS
 
-Creates a new email template
+Creates a new message template
 
 .DESCRIPTION
 
-Creates a new email template
+Creates a new message template
 
 .PARAMETER Connection
 
@@ -185,11 +185,11 @@ An operation method (default: 'Post')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/email_templates)
+An operation uri (default: /api/1.0/msg_templates)
 
-.PARAMETER EmailTemplate
+.PARAMETER MessageTemplate
 
-A email template with the following structure:
+A message template with the following structure:
 - id: string
 - name: string
 - from: string
@@ -202,8 +202,8 @@ A email template with the following structure:
 
 .EXAMPLE
 
-# Creates a new email template
-PS> New-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Creates a new message template
+PS> New-PipMessageTemplate -Name "test" -MessageTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -216,16 +216,16 @@ PS> New-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/email_templates",
+        [string] $Uri = "/api/1.0/msg_templates",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $EmailTemplate
+        [Object] $MessageTemplate
     )
     begin {}
     process 
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $EmailTemplate
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $MessageTemplate
         
         Write-Output $result
     }
@@ -233,16 +233,16 @@ PS> New-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly
 }
 
 
-function Update-PipEmailTemplate
+function Update-PipMessageTemplate
 {
 <#
 .SYNOPSIS
 
-Creates a new email template
+Creates a new message template
 
 .DESCRIPTION
 
-Creates a new email template
+Creates a new message template
 
 .PARAMETER Connection
 
@@ -258,11 +258,11 @@ An operation method (default: 'Put')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/email_templates/{0})
+An operation uri (default: /api/1.0/msg_templates/{0})
 
-.PARAMETER EmailTemplate
+.PARAMETER MessageTemplate
 
-A email template with the following structure:
+A message template with the following structure:
 - id: string
 - name: string
 - from: string
@@ -275,8 +275,8 @@ A email template with the following structure:
 
 .EXAMPLE
 
-# Update existing email template
-PS> Update-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
+# Update existing message template
+PS> Update-PipMessageTemplate -Name "test" -MessageTemplate @{ text=@{ en="Hurry slowly" }; author=@{ en="Russian proverb" }; status="completed" }
 
 #>
     [CmdletBinding()]
@@ -289,16 +289,16 @@ PS> Update-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slo
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/email_templates/{0}",
+        [string] $Uri = "/api/1.0/msg_templates/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $EmailTemplate
+        [Object] $MessageTemplate
     )
     begin {}
     process 
     {
-        $route = $Uri -f $EmailTemplate.id
+        $route = $Uri -f $MessageTemplate.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $EmailTemplate
+        $result = Invoke-PipFacade -Connection $Connection -Name $Name -Method $Method -Route $route -Request $MessageTemplate
         
         Write-Output $result
     }
@@ -306,16 +306,16 @@ PS> Update-PipEmailTemplate -Name "test" -EmailTemplate @{ text=@{ en="Hurry slo
 }
 
 
-function Remove-PipEmailTemplate
+function Remove-PipMessageTemplate
 {
 <#
 .SYNOPSIS
 
-Removes email template by id
+Removes message template by id
 
 .DESCRIPTION
 
-Removes email template by its unique id
+Removes message template by its unique id
 
 .PARAMETER Connection
 
@@ -331,16 +331,16 @@ An operation method (default: 'Delete')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/email_templates/{0})
+An operation uri (default: /api/1.0/msg_templates/{0})
 
 .PARAMETER Id
 
-A email template id
+A message template id
 
 .EXAMPLE
 
-# Delete email template with id 1232
-PS> Remove-PipEmailTemplate -Name "test" -Id 123
+# Delete message template with id 1232
+PS> Remove-PipMessageTemplate -Name "test" -Id 123
 
 #>
     [CmdletBinding()]
@@ -353,7 +353,7 @@ PS> Remove-PipEmailTemplate -Name "test" -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/email_templates/{0}",
+        [string] $Uri = "/api/1.0/msg_templates/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )
