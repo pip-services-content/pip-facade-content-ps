@@ -282,11 +282,11 @@ function Update-PipGuide
 <#
 .SYNOPSIS
 
-Creates a new guide
+Updates a  guide
 
 .DESCRIPTION
 
-Creates a new guide
+Updates a guide by its unique id
 
 .PARAMETER Connection
 
@@ -321,7 +321,7 @@ A guide with the following structure:
 
 .EXAMPLE
 
-Update-PipGuide -Guide @{ type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
+Update-PipGuide -Guide @{ id="123"; type="introduction"; app="MyApp"; pages=@(@{ title=@{ en="Welcome to MyApp" } }); status="completed" }
 
 #>
     [CmdletBinding()]

@@ -295,11 +295,11 @@ function Update-PipHelpArticle
 <#
 .SYNOPSIS
 
-Creates a new help article
+Updates a help article
 
 .DESCRIPTION
 
-Creates a new help article
+Updates a help article by its unique id
 
 .PARAMETER Connection
 
@@ -347,7 +347,7 @@ An article with the following structure:
 
 .EXAMPLE
 
-Update-PipHelpArticle -Article @{ topic_id="1"; app="MyApp"; min_ver=0; max_ver=9999; content=@(@{ language="en"; title="About MyApp" }); status="completed" }
+Update-PipHelpArticle -Article @{ id="123"; topic_id="1"; app="MyApp"; min_ver=0; max_ver=9999; content=@(@{ language="en"; title="About MyApp" }); status="completed" }
 
 #>
     [CmdletBinding()]

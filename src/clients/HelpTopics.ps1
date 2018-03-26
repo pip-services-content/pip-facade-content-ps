@@ -147,63 +147,6 @@ Get-PipHelpTopic -Id 123
 }
 
 
-function Get-PipRandomTopic
-{
-<#
-.SYNOPSIS
-
-Gets a random help topic
-
-.DESCRIPTION
-
-Gets a random help topic
-
-.PARAMETER Connection
-
-A connection object
-
-.PARAMETER Method
-
-An operation method (default: 'Get')
-
-.PARAMETER Uri
-
-An operation uri (default: /api/1.0/help/topics/random)
-
-.PARAMETER Filter
-
-A filter with search criteria (default: no filter)
-
-.EXAMPLE
-
-Get-PipRandomTopic
-
-#>
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [Hashtable] $Connection,
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Method = "Get",
-        [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/help/topics/random",
-        [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Hashtable] $Filter = @{}
-    )
-    begin {}
-    process 
-    {
-        $route = $Uri
-        $params = $Filter
-
-        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Params $params
-        
-        Write-Output $result
-    }
-    end {}
-}
-
 
 function New-PipHelpTopic
 {
@@ -274,11 +217,11 @@ function Update-PipHelpTopic
 <#
 .SYNOPSIS
 
-Creates a new help topic
+Updates a help topic
 
 .DESCRIPTION
 
-Creates a new help topic
+Updates a help topic by its unique id
 
 .PARAMETER Connection
 
@@ -306,7 +249,7 @@ A topic with the following structure:
 
 .EXAMPLE
 
-Update-PipHelpTopic -Topic @{ parent_id="1"; app="MyApp"; title=@{ en="Application Help" } }
+Update-PipHelpTopic -Topic @{ id="123"; parent_id="1"; app="MyApp"; title=@{ en="Application Help" } }
 
 #>
     [CmdletBinding()]
