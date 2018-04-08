@@ -297,11 +297,11 @@ function Update-PipFile
 <#
 .SYNOPSIS
 
-Creates a new file
+Updates a file
 
 .DESCRIPTION
 
-Creates a new file
+Updates a file
 
 .PARAMETER Connection
 

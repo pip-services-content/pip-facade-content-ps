@@ -282,7 +282,7 @@ function Update-PipGuide
 <#
 .SYNOPSIS
 
-Updates a  guide
+Updates a guide
 
 .DESCRIPTION
 

@@ -216,11 +216,11 @@ function Update-PipMessageTemplate
 <#
 .SYNOPSIS
 
-Creates a new message template
+Updates a message template
 
 .DESCRIPTION
 
-Creates a new message template
+Updates a message template
 
 .PARAMETER Connection
 

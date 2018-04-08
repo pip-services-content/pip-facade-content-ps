@@ -1,22 +1,22 @@
 ########################################################
 ##
-## ImageSets.ps1
+## Applications.ps1
 ## Client facade to content management Pip.Services
-## ImageSets commands
+## Applications commands
 ##
 #######################################################
 
 
-function Get-PipImageSets
+function Get-PipApplications
 {
 <#
 .SYNOPSIS
 
-Gets page with imagesets by specified criteria
+Gets page with applications by specified criteria
 
 .DESCRIPTION
 
-Gets a page with imagesets that satisfy specified criteria
+Gets a page with applications that satisfy specified criteria
 
 .PARAMETER Connection
 
@@ -28,7 +28,7 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets)
+An operation uri (default: /api/1.0/applications)
 
 .PARAMETER Filter
 
@@ -48,7 +48,7 @@ A include total count (default: false)
 
 .EXAMPLE
 
-Get-PipImageSets -Filter @{ tags="goals,success" } -Take 10
+Get-PipApplications -Filter @{ product="My Samples" } -Take 10
 
 #>
     [CmdletBinding()]
@@ -59,7 +59,7 @@ Get-PipImageSets -Filter @{ tags="goals,success" } -Take 10
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets",
+        [string] $Uri = "/api/1.0/applications",
         [Parameter(Mandatory=$false, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Hashtable] $Filter = @{},
         [Parameter(Mandatory=$false, Position = 1, ValueFromPipelineByPropertyName=$true)]
@@ -89,16 +89,16 @@ Get-PipImageSets -Filter @{ tags="goals,success" } -Take 10
 }
 
 
-function Get-PipImageSet
+function Get-PipApplication
 {
 <#
 .SYNOPSIS
 
-Gets imageset by id
+Gets application by id
 
 .DESCRIPTION
 
-Gets imageset by its unique id
+Gets application by its unique id
 
 .PARAMETER Connection
 
@@ -110,15 +110,15 @@ An operation method (default: 'Get')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets/{0})
+An operation uri (default: /api/1.0/applications/{0})
 
 .PARAMETER Id
 
-A imageset id
+A application id
 
 .EXAMPLE
 
-Get-PipImageSet -Id 123
+Get-PipApplication -Id 123
 
 #>
     [CmdletBinding()]
@@ -129,7 +129,7 @@ Get-PipImageSet -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Get",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets/{0}",
+        [string] $Uri = "/api/1.0/applications/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )
@@ -146,16 +146,16 @@ Get-PipImageSet -Id 123
 }
 
 
-function New-PipImageSet
+function New-PipApplication
 {
 <#
 .SYNOPSIS
 
-Creates a new imageset
+Creates a new application
 
 .DESCRIPTION
 
-Creates a new imageset
+Creates a new application
 
 .PARAMETER Connection
 
@@ -167,21 +167,22 @@ An operation method (default: 'Post')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets)
+An operation uri (default: /api/1.0/applications)
 
-.PARAMETER ImageSet
+.PARAMETER Application
 
-A imageset with the following structure:
-- id: string;
-- title: string
-- pics: AttachmentV1[]
-  - id: string
-  - uri: string
-- tags: string[];
+An application with the following structure:
+- id: string
+- name: string
+- description: string
+- product: string
+- copyrights: string
+- min_ver: number
+- max_ver: number
 
 .EXAMPLE
 
-New-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
+New-PipApplication -Application @{ id="my_app"; name="My Application"; product="My Samples" }
 
 #>
     [CmdletBinding()]
@@ -192,16 +193,16 @@ New-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Post",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets",
+        [string] $Uri = "/api/1.0/applications",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $ImageSet
+        [Object] $Application
     )
     begin {}
     process 
     {
         $route = $Uri
 
-        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $ImageSet
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Application
         
         Write-Output $result
     }
@@ -209,16 +210,16 @@ New-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @
 }
 
 
-function Update-PipImageSet
+function Update-PipApplication
 {
 <#
 .SYNOPSIS
 
-Updates an imageset
+Updates an application
 
 .DESCRIPTION
 
-Updates an imageset
+Updates an application
 
 .PARAMETER Connection
 
@@ -230,21 +231,22 @@ An operation method (default: 'Put')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets/{0})
+An operation uri (default: /api/1.0/applications/{0})
 
-.PARAMETER ImageSet
+.PARAMETER Application
 
-A imageset with the following structure:
-- id: string;
-- title: string
-- pics: AttachmentV1[]
-  - id: string
-  - uri: string
-- tags: string[];
+An application with the following structure:
+- id: string
+- name: string
+- description: string
+- product: string
+- copyrights: string
+- min_ver: number
+- max_ver: number
 
 .EXAMPLE
 
-Update-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }, @{ id=345 }) }
+Update-PipApplication -Application @{ id="my_app"; name="My Application"; product="My Samples" }
 
 #>
     [CmdletBinding()]
@@ -255,16 +257,16 @@ Update-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Put",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets/{0}",
+        [string] $Uri = "/api/1.0/applications/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-        [Object] $ImageSet
+        [Object] $Application
     )
     begin {}
     process 
     {
-        $route = $Uri -f $ImageSet.id
+        $route = $Uri -f $Application.id
 
-        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $ImageSet
+        $result = Invoke-PipFacade -Connection $Connection -Method $Method -Route $route -Request $Application
         
         Write-Output $result
     }
@@ -272,16 +274,16 @@ Update-PipImageSet -ImageSet @{ title="Cats"; tags=@("cats"); pics=@(@{ id=123 }
 }
 
 
-function Remove-PipImageSet
+function Remove-PipApplication
 {
 <#
 .SYNOPSIS
 
-Removes imageset by id
+Removes application by id
 
 .DESCRIPTION
 
-Removes imageset by its unique id
+Removes application by its unique id
 
 .PARAMETER Connection
 
@@ -293,15 +295,15 @@ An operation method (default: 'Delete')
 
 .PARAMETER Uri
 
-An operation uri (default: /api/1.0/imagesets/{0})
+An operation uri (default: /api/1.0/applications/{0})
 
 .PARAMETER Id
 
-A imageset id
+A application id
 
 .EXAMPLE
 
-Remove-PipImageSet -Id 123
+Remove-PipApplication -Id 123
 
 #>
     [CmdletBinding()]
@@ -312,7 +314,7 @@ Remove-PipImageSet -Id 123
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
         [string] $Method = "Delete",
         [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true)]
-        [string] $Uri = "/api/1.0/imagesets/{0}",
+        [string] $Uri = "/api/1.0/applications/{0}",
         [Parameter(Mandatory=$true, Position = 0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string] $Id
     )

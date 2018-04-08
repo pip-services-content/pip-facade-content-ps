@@ -271,11 +271,11 @@ function Update-PipQuote
 <#
 .SYNOPSIS
 
-Creates a new quote
+Updates a quote
 
 .DESCRIPTION
 
-Creates a new quote
+Updates a quote
 
 .PARAMETER Connection
 

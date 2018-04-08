@@ -282,11 +282,11 @@ function Update-PipTip
 <#
 .SYNOPSIS
 
-Creates a new tip
+Updates a tip
 
 .DESCRIPTION
 
-Creates a new tip
+Updates a tip
 
 .PARAMETER Connection
 
